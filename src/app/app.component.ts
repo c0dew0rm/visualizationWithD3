@@ -108,12 +108,14 @@ export class AppComponent implements OnInit {
 
   onClick() {
     console.log(this.chartData);
-    // var data = [{"salesperson":"Bob","sales":33},{"salesperson":"Robin","sales":12},{"salesperson":"Anne","sales":41},{"salesperson":"Mark","sales":16},{"salesperson":"Joe","sales":59},{"salesperson":"Eve","sales":38},{"salesperson":"Karen","sales":21},{"salesperson":"Kirsty","sales":25},{"salesperson":"Chris","sales":30},{"salesperson":"Lisa","sales":47},{"salesperson":"Tom","sales":5},{"salesperson":"Stacy","sales":20},{"salesperson":"Charles","sales":13},{"salesperson":"Mary","sales":29}];
     var data = this.chartData;
-// set the dimensions and margins of the graph
-var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+
+    var svg = d3.select(".my_bar");
+    console.log(svg);
+  // set the dimensions and margins of the graph
+  var margin = {top: 20, right: 20, bottom: 30, left: 50},
+    width = +svg.attr("width") - margin.left - margin.right,
+    height = +svg.attr("width") - margin.top - margin.bottom;
 
 // set the ranges
 var y = d3.scaleBand()
@@ -126,47 +128,51 @@ var x = d3.scaleLinear()
 // append the svg object to the body of the page
 // append a 'group' element to 'svg'
 // moves the 'group' element to the top left margin
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", 
-          "translate(" + margin.left + "," + margin.top + ")");
+let g = svg.append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   // format the data
   data.forEach(function(d) {
     d.val_1 = +d.val_1;
+    d.val_2 = +d.val_2;
   });
 
   // Scale the range of the data in the domains
   x.domain([0, d3.max(data, function(d){ return d.val_1; })])
   y.domain(data.map(function(d) { return d.brand; }));
-  //y.domain([0, d3.max(data, function(d) { return d.sales; })]);
+
+  // add the x Axis
+  g.append("g")
+  .attr("class", "axis x_axis")
+  .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x));
+
+  // add the y Axis
+  g.append("g")
+  .attr("class", "axis y_axis")
+  .call(d3.axisLeft(y));
 
   // append the rectangles for the bar chart
-  svg.selectAll(".bar")
+  g.selectAll(".bar1")
       .data(data)
       .enter().append("rect")
       .attr("class", "bar1")
       .attr("width", function(d) {return x(d.val_1); } )
       .attr("y", function(d) { return y(d.brand); })
+      .style("fill", "steelblue")
+      .style("opacity","0.5")
       .attr("height", y.bandwidth());
   
-  svg.selectAll(".bar2")
+  g.selectAll(".bar2")
   .data(data)
   .enter().append("rect")
   .attr("class", "bar2")
   .attr("width", function(d) {return x(d.val_2); } )
   .attr("y", function(d) { return y(d.brand); })
+  .style("fill", "gray")
+  .style("opacity","0.5")
   .attr("height", y.bandwidth());
-//  // add the x Axis
- svg.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
 
-//   // add the y Axis
-  svg.append("g")
-      .call(d3.axisLeft(y));
   }
 
 }
