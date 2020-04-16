@@ -107,94 +107,59 @@ export class AppComponent implements OnInit {
   }  
 
   onClick() {
-    console.log(this.chartData)
-    // this.createChart();
-    // if (this.chartData) {
-    //   this.updateChart();
-    // }
+    console.log(this.chartData);
+    // var data = [{"salesperson":"Bob","sales":33},{"salesperson":"Robin","sales":12},{"salesperson":"Anne","sales":41},{"salesperson":"Mark","sales":16},{"salesperson":"Joe","sales":59},{"salesperson":"Eve","sales":38},{"salesperson":"Karen","sales":21},{"salesperson":"Kirsty","sales":25},{"salesperson":"Chris","sales":30},{"salesperson":"Lisa","sales":47},{"salesperson":"Tom","sales":5},{"salesperson":"Stacy","sales":20},{"salesperson":"Charles","sales":13},{"salesperson":"Mary","sales":29}];
+    var data = this.chartData;
+// set the dimensions and margins of the graph
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+// set the ranges
+var y = d3.scaleBand()
+          .range([height, 0])
+          .padding(0.1);
+
+var x = d3.scaleLinear()
+          .range([0, width]);
+          
+// append the svg object to the body of the page
+// append a 'group' element to 'svg'
+// moves the 'group' element to the top left margin
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", 
+          "translate(" + margin.left + "," + margin.top + ")");
+
+  // format the data
+  data.forEach(function(d) {
+    d.sales = +d.sales;
+  });
+
+  // Scale the range of the data in the domains
+  x.domain([0, d3.max(data, function(d){ return d.val_1; })])
+  y.domain(data.map(function(d) { return d.brand; }));
+  //y.domain([0, d3.max(data, function(d) { return d.sales; })]);
+
+  // append the rectangles for the bar chart
+  svg.selectAll(".bar")
+      .data(data)
+    .enter().append("rect")
+      .attr("class", "bar")
+      //.attr("x", function(d) { return x(d.sales); })
+      .attr("width", function(d) {return x(d.val_1); } )
+      .attr("y", function(d) { return y(d.brand); })
+      .attr("height", y.bandwidth());
+ // add the x Axis
+ svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+  // add the y Axis
+  svg.append("g")
+      .call(d3.axisLeft(y));
   }
-
-//   createChart() {
-//     let element = this.chartContainer.nativeElement;
-//     this.width = element.offsetWidth - this.margin.left - this.margin.right;
-//     this.height = element.offsetHeight - this.margin.top - this.margin.bottom;
-//     let svg = d3.select(element).append('svg')
-//       .attr('width', element.offsetWidth)
-//       .attr('height', element.offsetHeight);
-
-//     // chart plot area
-//     this.chart = svg.append('g')
-//       .attr('class', 'bars')
-//       .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
-
-//     // define X & Y domains
-//     let xDomain = this.chartData.map(d => d[0]);
-//     let yDomain = [0, d3.max(this.data, d => d[1])];
-
-//     // create scales
-//     this.xScale = d3.scaleBand().padding(0.1).domain(xDomain).rangeRound([0, this.width]);
-//     this.yScale = d3.scaleLinear().domain(yDomain).range([this.height, 0]);
-
-//     // bar colors
-//     this.colors = d3.scaleLinear().domain([0, this.chartData.length]).range(<any[]>['red', 'blue']);
-
-//     // x & y axis
-//     this.xAxis = svg.append('g')
-//       .attr('class', 'axis axis-x')
-//       .attr('transform', `translate(${this.margin.left}, ${this.margin.top + this.height})`)
-//       .call(d3.axisBottom(this.xScale));
-//     this.yAxis = svg.append('g')
-//       .attr('class', 'axis axis-y')
-//       .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`)
-//       .call(d3.axisLeft(this.yScale));
-//   }
-
-//   updateChart() {
-//     // update scales & axis
-//     this.xScale.domain(this.chartData.map(d => d[0]));
-//     this.yScale.domain([0, d3.max(this.chartData, d => d[1])]);
-//     this.colors.domain([0, this.chartData.length]);
-//     this.xAxis.transition().call(d3.axisBottom(this.xScale));
-//     this.yAxis.transition().call(d3.axisLeft(this.yScale));
-
-//     let update = this.chart.selectAll('.bar')
-//       .data(this.chartData);
-
-//     // remove exiting bars
-//     update.exit().remove();
-
-//     // update existing bars
-//     this.chart.selectAll('.bar').transition()
-//       .attr('x', d => this.xScale(d[0]))
-//       .attr('y', d => this.yScale(d[1]))
-//       .attr('width', d => this.xScale.bandwidth())
-//       .attr('height', d => this.height - this.yScale(d[1]))
-//       .style('fill', (d, i) => this.colors(i));
-
-//     // add new bars
-//     update
-//       .enter()
-//       .append('rect')
-//       .attr('class', 'bar')
-//       .attr('x', d => this.xScale(d[0]))
-//       .attr('y', d => this.yScale(0))
-//       .attr('width', this.xScale.bandwidth())
-//       .attr('height', 0)
-//       .style('fill', (d, i) => this.colors(i))
-//       .transition()
-//       .delay((d, i) => i * 10)
-//       .attr('y', d => this.yScale(d[1]))
-//       .attr('height', d => this.height - this.yScale(d[1]));
-//   }
-
-//   generateData() {
-//     this.chartData = [];
-//     for (let i = 0; i < (8 + Math.floor(Math.random() * 10)); i++) {
-//     this.chartData.push([
-//     `Index ${i}`,
-//     Math.floor(Math.random() * 100)
-//     ]);
-//    }
-//  }
 
 }

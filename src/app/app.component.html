@@ -1,4 +1,4 @@
 <input type="file" #csvReader name="Upload CSV" id="txtFileUpload" (change)="uploadListener($event)" accept=".csv" />
 <button type="button" (click)="onClick()">Generate graph</button>    
-<!-- <app-barchart *ngIf="chartData" [data]="chartData"></app-barchart> -->
 <div class="d3-chart" #chart></div>
+
