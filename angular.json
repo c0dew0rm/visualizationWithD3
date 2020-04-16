@@ -24,7 +24,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/d3/dist/d3.min.js"
             ],
             "scripts": []
           },
@@ -119,6 +120,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "visualization"
+    }
+  },
+  "defaultProject": "visualization",
+  "cli": {
+    "analytics": false
+  }
 }
