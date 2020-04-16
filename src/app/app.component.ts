@@ -135,7 +135,7 @@ var svg = d3.select("body").append("svg")
 
   // format the data
   data.forEach(function(d) {
-    d.sales = +d.sales;
+    d.val_1 = +d.val_1;
   });
 
   // Scale the range of the data in the domains
@@ -146,18 +146,25 @@ var svg = d3.select("body").append("svg")
   // append the rectangles for the bar chart
   svg.selectAll(".bar")
       .data(data)
-    .enter().append("rect")
-      .attr("class", "bar")
-      //.attr("x", function(d) { return x(d.sales); })
+      .enter().append("rect")
+      .attr("class", "bar1")
       .attr("width", function(d) {return x(d.val_1); } )
       .attr("y", function(d) { return y(d.brand); })
       .attr("height", y.bandwidth());
- // add the x Axis
+  
+  svg.selectAll(".bar2")
+  .data(data)
+  .enter().append("rect")
+  .attr("class", "bar2")
+  .attr("width", function(d) {return x(d.val_2); } )
+  .attr("y", function(d) { return y(d.brand); })
+  .attr("height", y.bandwidth());
+//  // add the x Axis
  svg.append("g")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x));
 
-  // add the y Axis
+//   // add the y Axis
   svg.append("g")
       .call(d3.axisLeft(y));
   }

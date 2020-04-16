@@ -1,0 +1,14 @@
+.x_axis path {
+    display: none;
+  }
+
+  .bar1 {
+      color: red;
+    fill: steelblue;
+    opacity: 0.5;
+  }
+  
+  .bar2 {
+    fill: gray;
+    opacity: 0.5;
+  }
