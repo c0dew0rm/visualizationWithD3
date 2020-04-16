@@ -157,21 +157,22 @@ let g = svg.append("g")
       .data(data)
       .enter().append("rect")
       .attr("class", "bar1")
-      .attr("width", function(d) {return x(d.val_1); } )
-      .attr("y", function(d) { return y(d.brand); })
+      .attr("y", function(d) { return y(d.brand)+20; })
+      .style("","")
       .style("fill", "steelblue")
       .style("opacity","0.5")
-      .attr("height", y.bandwidth());
+      .attr("width", function(d) {return x(d.val_1); } )
+      .attr("height", y.bandwidth()-40);
   
   g.selectAll(".bar2")
-  .data(data)
-  .enter().append("rect")
-  .attr("class", "bar2")
-  .attr("width", function(d) {return x(d.val_2); } )
-  .attr("y", function(d) { return y(d.brand); })
-  .style("fill", "gray")
-  .style("opacity","0.5")
-  .attr("height", y.bandwidth());
+    .data(data)
+    .enter().append("rect")
+    .attr("class", "bar2")
+    .attr("y", function(d) { return y(d.brand); })
+    .style("fill", "gray")
+    .style("opacity","0.5")
+    .attr("width", function(d) {return x(d.val_2); } )
+    .attr("height", y.bandwidth());
 
   }
 
